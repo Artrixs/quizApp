@@ -18,12 +18,33 @@ abstract class Page
     /* Page title */
     protected $title;
 
+    /* HTML  of the page */
+    protected $pageHTML;
+
+    /* Meta charset of the page */
+    protected $metaCharset;
+
+    /* Meta Description of the page */
+    protected $metaDescription;
+
+    /* Meta Keywords of the page */
+    protected $metaKeywords;
+
+    /* Meta Author of the page */
+    protected $metaAuthor;
+
+    /* Meta links tag */
+    protected $metaLinks;
+
+   
     /**
      * Initializes the page's variables
      */
     public function __construct(){
         $this->cookies = array();
         $this->headers = array();
+        $this->metaLinks = array();
+        $this->pageHTML = "<!DOCTYPE html>";
     }
 
     /**
@@ -46,12 +67,71 @@ abstract class Page
     }
 
     /**
+     * Adds a link type tag to the page
+     * 
+     * @param string $rel relations between the document and page
+     * @param string $type media type of the linked document
+     * @param string $url location of the linked document
+     */
+    public function addLink(string $rel, string $type, string $url){
+        array_push($this->metaLinks, [$rel, $type, $url]);
+    }
+
+    /**
+     * Adds a stylesheet to the page
+     * @param string $url location from base directory
+     */
+    public function addStyleSheet(string $url){
+        $this->addLink("stylesheet", "text/css", "http://" .$_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"] . $url);
+    }
+
+    /**
      * Sets the page title
      * 
      * @param string $title title of the page
      */
     public function setTitle($title){
         $this->title = $title;
+    }
+
+    public function addHTML($html){
+        $this->pageHTML .= "\n{$html}";
+    }
+
+     /**
+     * Sets the charset of the HTML page
+     * 
+     * @param string $charset 
+    */
+    public function setCharset($charset){
+        $this->metaCharset = $charset;
+    }
+
+    /**
+     * Sets the description of the HTML page
+     * 
+     * @param string $description
+    */
+    public function setDescription($description){
+        $this->metaDescription = $description;
+    }
+
+    /**
+     * Sets the keywords of the HTML page
+     * 
+     * @param string $keywords list of comma separeted keywords
+    */
+    public function setKeywords($keywords){
+        $this->metaKeywords = $keywords;
+    }
+
+    /**
+     * Sets the author of the HTML page
+     * 
+     * @param string $author
+    */
+    public function setAuthor($author){
+        $this->metaAuthor = $author;
     }
 
     /**
@@ -75,6 +155,44 @@ abstract class Page
         foreach($this->headers as $header){
             header($header);
         }
+    }
+
+    /**
+     * Creates the HTML text inside the head tag
+     */
+    protected function genereateHeadHTML(){
+        $HTML = "<head>\n";
+        
+        if(isset($this->title)){
+            $HTML .= "<title>{$this->title}</title>\n"; 
+        }
+
+        if(isset($this->metaCharset)){
+            $HTML .= '<meta charset="' . $this->metaCharset . "\">\n"; 
+        }
+
+        if(isset($this->metaDescription)){
+            $HTML .= '<meta name="description" content="' . $this->metaDescription . "\">\n"; 
+        }
+
+        if(isset($this->metaKeywords)){
+            $HTML .= '<meta name="keywords" content="' . $this->metaKeywords . "\">\n"; 
+        }
+
+        if(isset($this->metaAuthor)){
+            $HTML .= '<meta name="author" content="' . $this->metaAuthor . "\">\n"; 
+        }
+ 
+        //Viewport
+        $HTML .= '<meta name="viewport" content="width=device-width, initial-scale=1.0">' . \PHP_EOL;
+
+        foreach($this->metaLinks as $link){
+            list($rel, $type, $url) = $link;
+            $HTML .= '<link rel="'. $rel . '" type="' . $type . '" href="' . $url . '">' . \PHP_EOL; 
+        }
+
+        $HTML .= "</head>";
+        return $HTML;
     }
 
 }
