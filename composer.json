@@ -1,0 +1,14 @@
+{
+    "name": "artrix/quiz-app",
+    "type": "project",
+    "authors": [
+        {
+            "name": "artrix",
+            "email": "misino.arturo@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4" : {"QuizApp\\": "includes/"}
+    }
+}
