@@ -48,9 +48,6 @@ class HTMLElement {
      * @param string $text
      */
     public function addText(string $text){
-        if(in_array($this->tag, self::VOID_TAG)){
-            throw new DomainException("{$this->tag} is a void tag, it can not have text inside");
-        }
         array_push($this->childs, $text);
     }
 
@@ -74,11 +71,10 @@ class HTMLElement {
             }
         }
 
-        $HTML .="</" . $this->tag . ">";
-
+        if( ! in_array($this->tag, self::VOID_TAG)){
+            $HTML .="</" . $this->tag . ">";
+        }
+        
         return $HTML;
     }
-
-
-
 }
