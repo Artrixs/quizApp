@@ -51,6 +51,12 @@ class HTMLElement {
         array_push($this->childs, $text);
     }
 
+       /**
+     * Gets the HTML code for the Elements and all of its child (recursive call)
+     * 
+     * @param int $ident number of identation to apply to the Element
+     * @return string HTML text of the Element
+     */
     public function getHTML($ident = 0){
         $identString = "";
         for($i = 0; $i < $ident; $i++){

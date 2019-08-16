@@ -49,6 +49,12 @@ class HTMLBlock
         array_push($this->childs, $text);
     }
 
+    /**
+     * Gets the HTML code for the Block and all of its child (recursive call)
+     * 
+     * @param int $ident number of identation to apply to the block
+     * @return string HTML text of the block
+     */
     public function getHTML($ident = 0) : string {
         $identString = "";
         for($i = 0; $i < $ident; $i++){

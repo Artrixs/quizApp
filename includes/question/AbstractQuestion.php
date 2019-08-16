@@ -4,12 +4,18 @@ namespace QuizApp\question;
 
 use QuizApp\page\HTMLElement;
 
+/**
+ * Abstract class to rappresent a question
+ */
 abstract class AbstractQuestion implements \Serializable 
 {
+    /* Order number of the question */
     protected $number;
 
+    /* Text of the question */
     protected $question;
 
+    
     public function __construct(int $number, string $question){
         $this->number = $number;
         $this->question = $question;

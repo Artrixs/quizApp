@@ -184,7 +184,7 @@ abstract class Page
     }
 
     /**
-     * Creates the HTML text inside the head tag, and puts it into the headHTML.
+     * Creates the HTML structure of the head tag with HTMLBlock and Element
      */
     protected function generateHead(){
         $this->head = new HTMLBlock("head");
@@ -227,6 +227,9 @@ abstract class Page
         }
     }
 
+    /**
+     * Abstract class, other class will implements their own body structure
+     */
     abstract protected function generateBody();
 
 }
