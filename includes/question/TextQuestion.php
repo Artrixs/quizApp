@@ -2,14 +2,18 @@
 
 namespace QuizApp\question;
 
+use QuizApp\page\HTMLBlock;
+use QuizApp\page\HTMLElement;
+
 class TextQuestion extends AbstractQuestion
 {
     public function getHTML(){
-        $result = "<fieldset>" . \PHP_EOL;
-        $result .= "\t" . $this->formatQuestionTitle() . \PHP_EOL;
-        $result .= "\t" . "<textarea name =\"{$this->number}\"></textarea>" . \PHP_EOL;
-        $result .= "</fieldset>";
+        $el = new HTMLBlock("fieldset");
+        $el->addChild( $this->getTitleHTML() );
+        
+        $textarea = new HTMLElement("textarea", ["name" => $this->number]);
 
-        return $result;
+        $el->addChild( $textarea );
+        return $el;
     }
 }

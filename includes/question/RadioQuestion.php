@@ -2,6 +2,9 @@
 
 namespace QuizApp\question;
 
+use QuizApp\page\HTMLBlock;
+use QuizApp\page\HTMLElement;
+
 class RadioQuestion extends AbstractQuestion
 {
     protected $options;
@@ -25,18 +28,25 @@ class RadioQuestion extends AbstractQuestion
     }
 
     public function getHTML(){
-        $result = "<fieldset>" . \PHP_EOL;
-        $result .= "\t" . $this->formatQuestionTitle() . \PHP_EOL;
+        $el = new HTMLBlock("fieldset");
+
+        $el->addChild( $this->getTitleHTML() );
+
         for( $i = 0; $i < count($this->options) - 1; $i++){
-            $option = $this->options[$i];
-            $result .= "\t" . "<input type=\"radio\" name=\"{$this->number}\" value=\"$option\">$option<br>" . \PHP_EOL;
+            $option = new HTMLElement("input", ["type" => "radio",
+                                                "name" => $this->number,
+                                                "value" => $this->options[$i]]);
+            $option->addText($this->options[$i] . "<br>");
+            $el->addChild($option);
         }
 
-        $option = $this->options[count($this->options)-1];
-        $result .= "\t" . "<input type=\"radio\" name=\"{$this->number}\" value=\"$option\">$option" . \PHP_EOL;
-    
-        $result .= "</fieldset>";
+        $option = new HTMLElement("input", ["type" => "radio",
+                                            "name" => $this->number,
+                                            "value" => $this->options[count($this->options) -1]
+                                            ]);
+        $option->addText($this->options[count($this->options) - 1]);
+        $el->addChild($option);
 
-        return $result;
+        return $el;
     }
 }

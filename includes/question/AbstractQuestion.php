@@ -2,6 +2,8 @@
 
 namespace QuizApp\question;
 
+use QuizApp\page\HTMLElement;
+
 abstract class AbstractQuestion implements \Serializable 
 {
     protected $number;
@@ -31,7 +33,9 @@ abstract class AbstractQuestion implements \Serializable
 
     abstract public function getHTML();
 
-    protected function formatQuestionTitle() : string {
-        return "<h4> {$this->number} {$this->question} </h4>";
+    protected function getTitleHTML() : HTMLElement {
+        $el = new HTMLElement("h4");
+        $el->addText($this->number . " ". $this->question);
+        return $el;
     }
 }
