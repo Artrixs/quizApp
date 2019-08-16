@@ -18,8 +18,11 @@ abstract class Page
     /* Page title */
     protected $title;
 
-    /* HTML  of the page */
-    protected $pageHTML;
+    /* HTML of the page head */
+    protected $headHTML;
+
+    /* HTML  of the page body */
+    protected $bodyHTML;
 
     /* Meta charset of the page */
     protected $metaCharset;
@@ -44,7 +47,11 @@ abstract class Page
         $this->cookies = array();
         $this->headers = array();
         $this->metaLinks = array();
-        $this->pageHTML = "<!DOCTYPE html>";
+        $this->headHTML = "";
+        $this->bodyHTML = "";
+
+        //By defualt use UTF-8
+        $this->metaCharset = "UTF-8";
     }
 
     /**
@@ -94,8 +101,13 @@ abstract class Page
         $this->title = $title;
     }
 
+    /**
+     * Adds the HTML to the body of the page
+     * 
+     * @param $html HTML to be inserted into the page
+     */
     public function addHTML($html){
-        $this->pageHTML .= "\n{$html}";
+        $this->bodyHTML .= "\n{$html}";
     }
 
      /**
@@ -158,10 +170,12 @@ abstract class Page
     }
 
     /**
-     * Creates the HTML text inside the head tag
+     * Creates the HTML text inside the head tag, and puts it into the headHTML.
      */
     protected function genereateHeadHTML(){
-        $HTML = "<head>\n";
+        $HTML = "<!DOCTYPE html>" . \PHP_EOL;
+        $HTML .= "<html lang=it>" . \PHP_EOL;
+        $HTML .= "<head>\n";
         
         if(isset($this->title)){
             $HTML .= "<title>{$this->title}</title>\n"; 
@@ -192,6 +206,17 @@ abstract class Page
         }
 
         $HTML .= "</head>";
+        $this->headHTML = $HTML;
+    }
+
+    protected function generatePageHTML(){
+        $this->genereateHeadHTML();
+        $HTML = $this->headHTML;
+        $HTML .= "<body>" . \PHP_EOL;
+        $HTML .= $this->bodyHTML;
+        $HTML .= "</body>" . \PHP_EOL;
+        $HTML .= "</html>";
+
         return $HTML;
     }
 
