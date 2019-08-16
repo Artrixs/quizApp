@@ -2,7 +2,6 @@
 
 namespace QuizApp\page;
 
-use QuizApp\question\AbstracQuestion;
 
 class TestPage extends Page{
     
@@ -17,11 +16,18 @@ class TestPage extends Page{
         array_push($this->questions, $question);
     }
 
-    public function run(){
+    protected function generateBody(){
+        $form = new HTMLBlock("form");
+        $questionsDiv = new HTMLBlock("div", ["class" => "questions"]);
+        $form->addChild($questionsDiv);
+
         foreach($this->questions as $question){
-            $this->addHTML($question->getHTML());
+            $questionsDiv->addChild( $question->getHTML() );
         }
-        
-        echo $this->generatePageHTML();
+
+        $btn = new HTMLElement("input", ["type" => "submit", "value" => "Consegna!"]);
+        $form->addChild($btn);
+
+        $this->body->addChild($form);
     }
 }

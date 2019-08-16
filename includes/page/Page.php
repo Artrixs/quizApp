@@ -3,6 +3,8 @@
 namespace QuizApp\page;
 
 use QuizApp\page\Cookie;
+use QuizApp\page\HTMLElement;
+use QuizApp\page\HTMLBlock;
 
 /**
  * Abstract Class to rappresent a page and its view
@@ -19,10 +21,10 @@ abstract class Page
     protected $title;
 
     /* HTML of the page head */
-    protected $headHTML;
+    protected $head;
 
     /* HTML  of the page body */
-    protected $bodyHTML;
+    protected $body;
 
     /* Meta charset of the page */
     protected $metaCharset;
@@ -47,8 +49,8 @@ abstract class Page
         $this->cookies = array();
         $this->headers = array();
         $this->metaLinks = array();
-        $this->headHTML = "";
-        $this->bodyHTML = "";
+        $this->head = new HTMLBlock("head");
+        $this->body = new HTMLBlock("body");
 
         //By defualt use UTF-8
         $this->metaCharset = "UTF-8";
@@ -149,7 +151,19 @@ abstract class Page
     /**
      * Main function to create the page and outputs it
      */
-    abstract function run();
+    function run(){
+        $this->generateCookies();
+        $this->generateHeaders();
+        $this->generateHead();
+        $this->generateBody();
+
+        echo "<!DOCTYPE html>" . \PHP_EOL;
+        $html = new HTMLBlock("html", ["lang" => "it"]);
+        $html->addChild( $this->head );
+        $html->addChild( $this->body );
+
+        echo $html->getHTML();
+    }
 
     /**
      * Sets the cookies associated with the page
@@ -172,52 +186,47 @@ abstract class Page
     /**
      * Creates the HTML text inside the head tag, and puts it into the headHTML.
      */
-    protected function genereateHeadHTML(){
-        $HTML = "<!DOCTYPE html>" . \PHP_EOL;
-        $HTML .= "<html lang=it>" . \PHP_EOL;
-        $HTML .= "<head>\n";
-        
+    protected function generateHead(){
+        $this->head = new HTMLBlock("head");
         if(isset($this->title)){
-            $HTML .= "<title>{$this->title}</title>\n"; 
+            $title = new HTMLElement("title");
+            $title->addText($this->title);
+            $this->head->addChild( $title );
         }
 
         if(isset($this->metaCharset)){
-            $HTML .= '<meta charset="' . $this->metaCharset . "\">\n"; 
+            $charset = new HTMLElement("meta", ["charset" => $this->metaCharset]);
+            $this->head->addChild( $charset );
         }
 
         if(isset($this->metaDescription)){
-            $HTML .= '<meta name="description" content="' . $this->metaDescription . "\">\n"; 
+            $description = new HTMLElement("meta", ["name" => "description", "content" => $this->metaDescription]);
+            $this->head->addChild( $description );
         }
 
         if(isset($this->metaKeywords)){
-            $HTML .= '<meta name="keywords" content="' . $this->metaKeywords . "\">\n"; 
+            $keywords = new HTMLElement("meta", ["name" => "keywords", "content" => $this->metaKeywords]);
+            $this->head->addChild( $keywords );
         }
 
         if(isset($this->metaAuthor)){
-            $HTML .= '<meta name="author" content="' . $this->metaAuthor . "\">\n"; 
+            $author = new HTMLElement("meta", ["name" => "author", "content" => $this->metaAuthor]);
+            $this->head->addChild( $author );
         }
- 
-        //Viewport
-        $HTML .= '<meta name="viewport" content="width=device-width, initial-scale=1.0">' . \PHP_EOL;
+
+        $viewport = new HTMLElement("meta", ["name" => "viewport",
+                                              "content" => "width=device-width, initial-scale=1.0"]);
+        $this->head->addChild( $viewport );
 
         foreach($this->metaLinks as $link){
             list($rel, $type, $url) = $link;
-            $HTML .= '<link rel="'. $rel . '" type="' . $type . '" href="' . $url . '">' . \PHP_EOL; 
+            $linkElement = new HTMLElement("link", ["rel"  => $rel,
+                                                    "type" => $type,
+                                                    "href" => $url]);
+            $this->head->addChild( $linkElement );
         }
-
-        $HTML .= "</head>";
-        $this->headHTML = $HTML;
     }
 
-    protected function generatePageHTML(){
-        $this->genereateHeadHTML();
-        $HTML = $this->headHTML;
-        $HTML .= "<body>" . \PHP_EOL;
-        $HTML .= $this->bodyHTML;
-        $HTML .= "</body>" . \PHP_EOL;
-        $HTML .= "</html>";
-
-        return $HTML;
-    }
+    abstract protected function generateBody();
 
 }
