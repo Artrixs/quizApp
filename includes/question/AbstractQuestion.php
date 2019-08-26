@@ -7,7 +7,7 @@ use QuizApp\page\HTMLElement;
 /**
  * Abstract class to rappresent a question
  */
-abstract class AbstractQuestion implements \Serializable 
+abstract class AbstractQuestion
 {
     /* Order number of the question */
     protected $number;
@@ -27,14 +27,6 @@ abstract class AbstractQuestion implements \Serializable
 
     public function getQuestion(): string {
         return $this->question;
-    }
-
-    public function serialize() {
-        return serialize([$this->number, $this->question]);
-    }
-
-    public function unserialize($data) {
-        list($this->number, $this->question) = unserialize($data);
     }
 
     abstract public function getHTML();

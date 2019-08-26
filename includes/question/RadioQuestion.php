@@ -19,13 +19,6 @@ class RadioQuestion extends AbstractQuestion
         return $this->options;
     }
 
-    public function serialize(){
-        return serialize([$this->number, $this->question, $this->options]);
-    }
-
-    public function unserialize($data){
-        list($this->number, $this->question, $this->options) = unserialize($data);
-    }
 
     public function getHTML(){
         $el = new HTMLBlock("fieldset");
