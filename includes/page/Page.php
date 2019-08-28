@@ -91,7 +91,10 @@ abstract class Page
      * @param string $url location from base directory
      */
     public function addStyleSheet(string $url){
-        $this->addLink("stylesheet", "text/css", "http://" .$_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"] . $url);
+        if($url[0] != '/'){ //Check if its a base url
+            $url = '/' . $url;
+        }
+        $this->addLink("stylesheet", "text/css", $url);
     }
 
     /**
